@@ -27,6 +27,7 @@ export P="{127,255,511,1023,2047,4095,8191,16383,32767,65535}"
 export P="{127,255,511,1023}"
 export k="3"
 export F="{1,2,3,4,5,6,7,8,9,10}"
+export F="{1,2,3}"
 
 # Script directory
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
