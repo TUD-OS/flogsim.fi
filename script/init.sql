@@ -30,7 +30,6 @@ CREATE TABLE experiment_log (
     finished_nodes INT,
     unreached_nodes INT,
     msg_task INT,
-    seed INT,
-    primary key(id));
+    seed INT);
 
 GRANT SELECT, INSERT, UPDATE ON flogsim.* TO 'user';
