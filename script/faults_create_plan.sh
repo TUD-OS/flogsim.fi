@@ -25,13 +25,13 @@ cmake $BASE/flogsim.fi/flogsim -DCMAKE_BUILD_TYPE=Release
 make -j
 popd
 
-COMBINATIONS=$(eval echo "$COLL+$L+$o+$g+$P+$k+$F")
+COMBINATIONS=$(eval echo "$COLL+$L+$o+$g+$P+$k+$F+$PAR")
 for EXPERIMENT in $COMBINATIONS
 do
-    read COLL L o g P k F <<<$(IFS="+"; echo $EXPERIMENT)
+    read COLL L o g P k F PAR <<<$(IFS="+"; echo $EXPERIMENT)
 
     CONDUCTED=0
 
-    echo $GIT_COMMIT $COLL $L $o $g $P $k $F $TOTAL
-    echo "INSERT INTO experiment_plan (GIT_COMMIT,COLL,k,L,o,g,P,F,conducted,total) VALUES (\"$GIT_COMMIT\",\"$COLL\",$k,$L,$o,$g,$P,$F,$CONDUCTED,$TOTAL)" | $MYSQL_REQUEST
+    echo $GIT_COMMIT $COLL $L $o $g $P $k $F $PAR $TOTAL
+    echo "INSERT INTO experiment_plan (GIT_COMMIT,COLL,k,L,o,g,P,F,PAR,conducted,total) VALUES (\"$GIT_COMMIT\",\"$COLL\",$k,$L,$o,$g,$P,$F,$PAR,$CONDUCTED,$TOTAL)" | $MYSQL_REQUEST
 done

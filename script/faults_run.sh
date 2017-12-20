@@ -49,17 +49,17 @@ do
         exit 0
     fi
 
-    read ID GIT_COMMIT COLL k L o g P F CONDUCTED TOTAL <<<$(echo $EXPERIMENT)
+    read ID GIT_COMMIT COLL k L o g P F PAR CONDUCTED TOTAL <<<$(echo $EXPERIMENT)
 
     F=$(($P * $F / 100))
 
-    echo $COLL $L $o "g=$g" "P=$P" $k $F $CONDUCTED $TOTAL
+    echo $COLL $L $o "g=$g" "P=$P" $k $F $PAR $CONDUCTED $TOTAL
 
     if [[ $F == 0 ]]
     then
-        COMMAND="$FLOGSIM --k $k --P $P --o $o --g $g --L $L --faults none --coll $COLL"
+        COMMAND="$FLOGSIM --k $k --P $P --o $o --g $g --L $L --faults none --coll $COLL --parallelism $PAR"
     else
-        COMMAND="$FLOGSIM --k $k --P $P --o $o --g $g --L $L --faults uniform --F $F --coll $COLL"
+        COMMAND="$FLOGSIM --k $k --P $P --o $o --g $g --L $L --faults uniform --F $F --coll $COLL  --parallelism $PAR"
     fi
 
     for ((i=1;i<=$BATCH_SIZE;i++))

@@ -28,6 +28,8 @@ export P="{127,255,511,1023}"
 export k="3"
 export F="{1,2,3,4,5,6,7,8,9,10}"
 export F="{1,2,3}"
+# parallelism
+export PAR="{1,2}"
 
 # Script directory
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
