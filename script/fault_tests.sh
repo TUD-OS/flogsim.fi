@@ -3,36 +3,24 @@
 set -euo pipefail
 
 # Should we reset job array
-export RESET_DB=1
 export DBSERVER_PORT=3306
 
 # Configure number of jobs
 # Format jobid_start-jobid_end%maximum_concurrency
-export JOB_ARRAY="1-100%20"
+export JOB_ARRAY="1-400%400"
 
 # Allocate sql server
 export BASE=/scratch/s9951545/flogsim
 export MYSQL_DIR=$BASE/faults/mariadb-10.2.10-linux-x86_64
 
 # Total number of experiments
-export TOTAL=100
+export TOTAL=1000
 export BATCH_SIZE=50
-
-# Parameters of experiments
-export COLL="{phased_checked_corrected_binomial_bcast,checked_corrected_binomial_bcast,checked_corrected_optimal_bcast}"
-export L="{1,2}"
-export o="{1,3}"
-export g="1"
-export P="{127,255,511,1023,2047,4095,8191,16383,32767,65535}"
-export P="{127,255,511,1023}"
-export k="3"
-export F="{1,2,3,4,5,6,7,8,9,10}"
-export F="{1,2,3}"
-# parallelism
-export PAR="{1,2}"
 
 # Script directory
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source $SCRIPT_DIR/parameters.env
 
 sbatch $SCRIPT_DIR/faults_server.sh
 
