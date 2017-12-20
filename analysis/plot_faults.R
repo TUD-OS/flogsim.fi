@@ -47,13 +47,13 @@ res <- mutate(res, COLL = revalue(COLL,
                                     "phased_checked_corrected_binomial_bcast" = "Phased optimal")))
 
 p <- res %>%
-    group_by(L, o, f_frac) %>%
+    group_by(k, L, o, g, f_frac) %>%
     do (
         plots = ggplot(data = .) +
             geom_line(aes(x = P, y = avg_runtime, color = COLL)) +
             ylim(0, max.runtime) +
             ggtitle("Scalability at the same fault rate",
-                    subtitle = paste("F =", .$f_frac, "%", "L =", .$L, "o = ", .$o)) +
+                    subtitle = paste("F =", .$f_frac, "%", "L =", .$L, "o = ", .$o, "g =", .$g, "k =", .$k)) +
             ylab("Runtime, steps") +
             guides(color = guide_legend(title = "Collective")) +
             theme_linedraw(base_size = 10) +
@@ -76,13 +76,13 @@ print(lapply(p$plots, add.log.scale))
 p <- res %>%
     filter(f_frac %in% c(1, 2, 4, 6, 8, 10)) %>%
     collect() %>%
-    group_by(COLL, L, o) %>%
+    group_by(COLL, L, o, g, k) %>%
     do (
         plots = ggplot(data = .) +
             geom_line(aes(x = P, y = avg_runtime, color = as.factor(f_frac))) +
             ylim(0, max.runtime) +
             ggtitle("Sturdiness with growing number of faults",
-                    subtitle = paste(.$COLL, "L =", .$L, "o = ", .$o)) +
+                    subtitle = paste(.$COLL, "L =", .$L, "o = ", .$o, "g =", .$g, "k =", .$k)) +
             ylab("Runtime, steps") +
             guides(color = guide_legend(title = "F (%)")) +
             scale_color_brewer(type = "seq", palette="Oranges") +
@@ -102,13 +102,13 @@ pdf('messages.pdf', width = 7, height = 4)
 max.msg = max(res$avg_msg + res$sd_msg + 0.1)
 
 p <- res %>%
-    group_by(L, o, f_frac) %>%
+    group_by(k, L, o, g, f_frac) %>%
     do (
         plots = ggplot(data = .) +
             geom_line(aes(x = P, y = avg_msg, color = COLL)) +
             ylim(0, max.msg) +
             ggtitle("Scalability at the same fault rate",
-                    subtitle = paste("F =", .$f_frac, "%", "L =", .$L, "o = ", .$o)) +
+                    subtitle = paste("F =", .$f_frac, "%", "L =", .$L, "o = ", .$o, "g =", .$g, "k =", .$k)) +
             ylab("Messages, count") +
             guides(color = guide_legend(title = "Collective")) +
             theme_linedraw(base_size = 10) +
@@ -129,13 +129,13 @@ print(lapply(p$plots, add.log.scale))
 p <- res %>%
     filter(f_frac %in% c(1, 2, 4, 6, 8, 10)) %>%
     collect() %>%
-    group_by(COLL, L, o) %>%
+    group_by(COLL, L, o, g, k) %>%
     do (
         plots = ggplot(data = .) +
             geom_line(aes(x = P, y = avg_msg, color = as.factor(f_frac))) +
             ylim(0, max.msg) +
             ggtitle("Sturdiness with growing number of faults",
-                    subtitle = paste(.$COLL, "L =", .$L, "o = ", .$o)) +
+                    subtitle = paste(.$COLL, "L =", .$L, "o = ", .$o, "g =", .$g, "k =", .$k)) +
             ylab("Messages, count") +
             guides(color = guide_legend(title = "F (%)")) +
             scale_color_brewer(type = "seq", palette="Oranges") +
