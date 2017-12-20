@@ -1,2 +1,6 @@
 slurm/out*
 slurm-*
+push.sh
+*~
+*.pdf
+*.csv
