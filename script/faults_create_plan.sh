@@ -19,6 +19,12 @@ then
     exit 1
 fi
 
+# Ensure that we are actually running the latest revision
+pushd $BASE/flogsim_build
+cmake $BASE/flogsim.fi/flogsim -DCMAKE_BUILD_TYPE=Release
+make -j
+popd
+
 COMBINATIONS=$(eval echo "$COLL+$L+$o+$g+$P+$k+$F")
 for EXPERIMENT in $COMBINATIONS
 do
