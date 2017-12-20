@@ -43,7 +43,7 @@ node.list <- (2^c(1:17)) - 1
 res <- mutate(res, COLL = revalue(COLL,
                                   c("checked_corrected_binomial_bcast" = "Checked binomial",
                                     "checked_corrected_optimal_bcast" = "Checked optimal",
-                                    "phased_checked_corrected_binomial_bcast" = "Phased optimal")))
+                                    "phased_checked_corrected_binomial_bcast" = "Phased binomial")))
 
 p <- res %>%
     group_by(k, L, o, g, F) %>%
