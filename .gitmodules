@@ -1,0 +1,4 @@
+[submodule "flogsim"]
+	path = flogsim
+	url = /home/desertfox/research/projects/ffmk/treereduce/flogsim
+	branch = mplaneta/dev
