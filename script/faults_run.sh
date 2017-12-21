@@ -69,9 +69,8 @@ do
         read RUNTIME FAILED FINISHED UNREACHED MSGTASK SEED REST <<<$(echo "$OUT" | sed -e 's/^[^,]*,//g')
 
         read -r -d '' INSERT_RESULT_SQL << EOF
-INSERT INTO experiment_log
-VALUES ($ID,
-  $RUNTIME,$FAILED,$FINISHED,$UNREACHED,$MSGTASK,$SEED)
+INSERT INTO experiment_log (id,runtime,failed_nodes,finished_nodes,unreached_nodes,msg_task,seed)
+VALUES ($ID,$RUNTIME,$FAILED,$FINISHED,$UNREACHED,$MSGTASK,$SEED)
 EOF
 
         echo "$INSERT_RESULT_SQL" | $MYSQL_REQUEST
