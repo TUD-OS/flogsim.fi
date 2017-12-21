@@ -23,7 +23,8 @@ SELECT id
 INTO @ID
 FROM experiment_plan
 WHERE conducted < total
-LIMIT 1;
+LIMIT 1
+FOR UPDATE;
 IF (SELECT COUNT(@ID)) > 0 THEN
   UPDATE experiment_plan
   SET conducted = conducted + $BATCH_SIZE
