@@ -55,7 +55,7 @@ do
 
     F=$(($P * $F / 100))
 
-    echo $COLL $L $o "g=$g" "P=$P" $k $F $PAR $CONDUCTED $TOTAL
+    # echo $COLL $L $o "g=$g" "P=$P" $k $F $PAR $CONDUCTED $TOTAL
 
     if [[ $F == 0 ]]
     then
@@ -67,7 +67,7 @@ do
     for ((i=1;i<=$BATCH_SIZE;i++))
     do
         OUT="$($COMMAND)"
-        echo "$OUT"
+        # echo "$OUT"
         read RUNTIME FAILED FINISHED UNREACHED MSGTASK SEED REST <<<$(echo "$OUT" | sed -e 's/^[^,]*,//g')
 
         read -r -d '' INSERT_RESULT_SQL << EOF
