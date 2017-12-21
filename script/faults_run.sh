@@ -23,6 +23,7 @@ SELECT id
 INTO @ID
 FROM experiment_plan
 WHERE conducted < total
+ORDER BY RAND()
 LIMIT 1
 FOR UPDATE;
 IF (SELECT COUNT(@ID)) > 0 THEN
