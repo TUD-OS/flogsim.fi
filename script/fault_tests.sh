@@ -13,10 +13,6 @@ export JOB_ARRAY="1-400%400"
 export BASE=/scratch/s9951545/flogsim
 export MYSQL_DIR=$BASE/faults/mariadb-10.2.10-linux-x86_64
 
-# Total number of experiments
-export TOTAL=1000
-export BATCH_SIZE=50
-
 # Script directory
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
