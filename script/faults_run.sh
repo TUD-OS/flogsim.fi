@@ -3,8 +3,8 @@
 #SBATCH --time=12:00:00
 #SBATCH --mem-per-cpu=1500
 #SBATCH --ntasks=1
-#SBATCH --output=slurm/out-%j.out
-#SBATCH --error=slurm/out-%j.err
+#SBATCH --output=slurm/out-%A.%a.out
+#SBATCH --error=slurm/out-%A.%a.err
 
 module add gcc/7.1.0 boost/1.65.1-gnu7.1 2>&1 > /dev/null
 
