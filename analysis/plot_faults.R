@@ -29,6 +29,7 @@ pdf(opt$options$runtime, width = 7, height = 4)
 res <- plan %>%
     inner_join(runs) %>%
     group_by(COLL, k, PAR, L, o, g, P, F) %>%
+    filter(UnreachedNodes == 0) %>%
     summarise(avg_runtime = mean(TotalRuntime),
               avg_msg = mean(MsgTask),
               sd_runtime = sd(TotalRuntime),
