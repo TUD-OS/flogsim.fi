@@ -61,6 +61,7 @@ then
     fi
 fi
 
-mkdir -p slurm
+GIT_COMMIT=$(git rev-parse --short=7 HEAD)
+mkdir -p ../slurm/$GIT_COMMIT
 
 sbatch -a$JOB_ARRAY $SCRIPT_DIR/faults_run.sh
