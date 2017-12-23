@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -A p_ffmk
-#SBATCH --time=12:00:00
+#SBATCH --time=70:00:00
 #SBATCH --mem-per-cpu=1500
 #SBATCH --ntasks=1
 #SBATCH --output=slurm/out-%A.%a.out
@@ -55,26 +55,7 @@ do
 
     F=$(($P * $F / 100))
 
-    # echo $COLL $L $o "g=$g" "P=$P" $k $F $PAR $CONDUCTED $TOTAL
-
-    if [[ $F == 0 ]]
-    then
-        COMMAND="$FLOGSIM --k $k --P $P --o $o --g $g --L $L --faults none --coll $COLL --parallelism $PAR"
-    else
-        COMMAND="$FLOGSIM --k $k --P $P --o $o --g $g --L $L --faults uniform --F $F --coll $COLL  --parallelism $PAR"
-    fi
-
-    for ((i=1;i<=$BATCH_SIZE;i++))
-    do
-        OUT="$($COMMAND)"
-        # echo "$OUT"
-        read RUNTIME FAILED FINISHED UNREACHED MSGTASK SEED REST <<<$(echo "$OUT" | sed -e 's/^[^,]*,//g')
-
-        read -r -d '' INSERT_RESULT_SQL << EOF
-INSERT INTO experiment_log (id,runtime,failed_nodes,finished_nodes,unreached_nodes,msg_task,seed)
-VALUES ($ID,$RUNTIME,$FAILED,$FINISHED,$UNREACHED,$MSGTASK,$SEED)
-EOF
-
-        echo "$INSERT_RESULT_SQL" | $MYSQL_REQUEST
-    done
+    $FLOGSIM -L $L -o $o -g $g -P $P -k $k \
+             --faults uniform -F $F --coll $COLL --parallelism $PAR \
+             -r $BATCH_SIZE --results-format csv-id --id $GIT_COMMIT
 done
