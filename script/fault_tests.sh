@@ -64,4 +64,6 @@ fi
 GIT_COMMIT=$(git rev-parse --short=7 HEAD)
 mkdir -p ../slurm/$GIT_COMMIT
 
+module add gcc/7.1.0 boost/1.65.1-gnu7.1 2>&1 > /dev/null
+
 sbatch -a$JOB_ARRAY $SCRIPT_DIR/faults_run.sh

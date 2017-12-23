@@ -6,8 +6,6 @@
 #SBATCH --output=slurm/out-%A.%a.out
 #SBATCH --error=slurm/out-%A.%a.err
 
-module add gcc/7.1.0 boost/1.65.1-gnu7.1 2>&1 > /dev/null
-
 MYSQL_DIR=$BASE/faults/mariadb-10.2.10-linux-x86_64
 MYSQL=$MYSQL_DIR/bin/mysql
 MYSQL_REQUEST="$MYSQL --no-defaults -u user -h $DBSERVER -puser flogsim"
@@ -46,7 +44,7 @@ do
     if [[ -z "$EXPERIMENT" ]]
     then
         # All experiments are done
-        echo "Tell not to start new array jobs"
+        1>&2 echo "Tell not to start new array jobs"
         scancel -u $USER --state=pending
         exit 0
     fi
