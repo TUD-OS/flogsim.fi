@@ -2,19 +2,10 @@
 
 set -euo pipefail
 
-# Should we reset job array
-export DBSERVER_PORT=3306
-
-# Configure number of jobs
-# Format jobid_start-jobid_end%maximum_concurrency
-export JOB_ARRAY="1-200%200"
-
-# Allocate sql server
-export BASE=/scratch/s9951545/flogsim
-export MYSQL_DIR=$BASE/faults/mariadb-10.2.10-linux-x86_64
-
 # Script directory
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source $SCRIPT_DIR/init.env
 
 source $SCRIPT_DIR/parameters.env
 
@@ -23,40 +14,9 @@ sbatch $SCRIPT_DIR/faults_server.sh
 # Useful variables
 export GIT_COMMIT=$(git rev-parse --short=7 HEAD)
 
-export MYSQL=$MYSQL_DIR/bin/mysql
-
-# Wait until sql server gets the allocation
-SERVER_JOB_ID=$(squeue -u $USER -o "%A %j" |
-                    grep faults_server.sh |
-                    cut -d' ' -f1)
-while true
-do
-    # Give a second to start the job
-    sleep 1
-
-    DBSERVER=$(squeue -j $SERVER_JOB_ID -o %N | tail -n 1)
-
-    # Next line checks if the job didn't get resources yet
-    if [[ -z "$DBSERVER" ]]
-    then
-        continue
-    fi
-    break
-done
-
-# Now check if the SQL server is really started
-
-while ! nc -z $DBSERVER $DBSERVER_PORT
-do
-    # Give a second to start the server
-    sleep 0.5
-done
+source $SCRIPT_DIR/get_server.env
 
 echo "Started dbserver at: $DBSERVER"
-
-# Export data base server name
-export DBSERVER
-export MYSQL_REQUEST="$MYSQL --no-defaults -u user -h $DBSERVER -puser flogsim"
 
 if [ $RESET_DB -eq 1 ]
 then
@@ -71,7 +31,5 @@ mkdir -p ../slurm/$GIT_COMMIT
 cd ../slurm/$GIT_COMMIT
 
 echo 'SELECT * FROM experiment_plan' | $MYSQL_REQUEST | sed 's/\t/,/g' > experiment_plan.csv
-
-module add gcc/7.1.0 boost/1.65.1-gnu7.1 2>&1 > /dev/null
 
 sbatch -a$JOB_ARRAY $SCRIPT_DIR/faults_run.sh

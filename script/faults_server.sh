@@ -14,5 +14,5 @@ set -euo pipefail
 
 # See init.sql
 
-cd $BASE/faults/mariadb-10.2.10-linux-x86_64
+cd $MYSQL_DIR
 ./bin/mysqld --no-defaults --datadir=./data -L ./share/ -P $DBSERVER_PORT

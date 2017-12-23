@@ -6,13 +6,6 @@
 #SBATCH --output=results-%A.%a.out
 #SBATCH --error=out-%A.%a.err
 
-MYSQL_DIR=$BASE/faults/mariadb-10.2.10-linux-x86_64
-MYSQL=$MYSQL_DIR/bin/mysql
-MYSQL_REQUEST="$MYSQL --no-defaults -u user -h $DBSERVER -puser flogsim"
-
-FLOGSIM_DIR=$BASE/flogsim_build
-FLOGSIM=$FLOGSIM_DIR/flogsim
-
 read -r -d '' REQUEST_EXPERIMENT_SQL << EOF
 DELIMITER //
 

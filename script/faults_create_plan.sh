@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Create tables from scratch
-MYSQL_REQUEST_ROOT="ssh $DBSERVER $MYSQL --no-defaults -u root -paoeuaoeu mysql"
 if ! $MYSQL_REQUEST_ROOT < $SCRIPT_DIR/init.sql
 then
     echo "Failed to create table: $exit_status"
