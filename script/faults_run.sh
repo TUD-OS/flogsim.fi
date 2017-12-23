@@ -3,8 +3,8 @@
 #SBATCH --time=70:00:00
 #SBATCH --mem-per-cpu=1500
 #SBATCH --ntasks=1
-#SBATCH --output=slurm/out-%A.%a.out
-#SBATCH --error=slurm/out-%A.%a.err
+#SBATCH --output=results-%A.%a.out
+#SBATCH --error=out-%A.%a.err
 
 MYSQL_DIR=$BASE/faults/mariadb-10.2.10-linux-x86_64
 MYSQL=$MYSQL_DIR/bin/mysql
