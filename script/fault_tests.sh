@@ -7,7 +7,7 @@ export DBSERVER_PORT=3306
 
 # Configure number of jobs
 # Format jobid_start-jobid_end%maximum_concurrency
-export JOB_ARRAY="1-48%48"
+export JOB_ARRAY="1-200%200"
 
 # Allocate sql server
 export BASE=/scratch/s9951545/flogsim
@@ -16,7 +16,7 @@ export MYSQL_DIR=$BASE/faults/mariadb-10.2.10-linux-x86_64
 # Script directory
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source $SCRIPT_DIR/parameters_debug.env
+source $SCRIPT_DIR/parameters.env
 
 sbatch $SCRIPT_DIR/faults_server.sh
 
