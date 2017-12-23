@@ -20,6 +20,11 @@ source $SCRIPT_DIR/parameters_debug.env
 
 sbatch $SCRIPT_DIR/faults_server.sh
 
+# Useful variables
+export GIT_COMMIT=$(git rev-parse --short=7 HEAD)
+
+export MYSQL=$MYSQL_DIR/bin/mysql
+
 # Wait until sql server gets the allocation
 SERVER_JOB_ID=$(squeue -u $USER -o "%A %j" |
                     grep faults_server.sh |
@@ -51,6 +56,7 @@ echo "Started dbserver at: $DBSERVER"
 
 # Export data base server name
 export DBSERVER
+export MYSQL_REQUEST="$MYSQL --no-defaults -u user -h $DBSERVER -puser flogsim"
 
 if [ $RESET_DB -eq 1 ]
 then
@@ -61,8 +67,10 @@ then
     fi
 fi
 
-GIT_COMMIT=$(git rev-parse --short=7 HEAD)
 mkdir -p ../slurm/$GIT_COMMIT
+cd ../slurm/$GIT_COMMIT
+
+echo 'SELECT * FROM experiment_plan' | $MYSQL_REQUEST | sed 's/\t/,/g' > experiment_plan.csv
 
 module add gcc/7.1.0 boost/1.65.1-gnu7.1 2>&1 > /dev/null
 

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-MYSQL=$MYSQL_DIR/bin/mysql
-MYSQL_REQUEST="$MYSQL --no-defaults -u user -h $DBSERVER -puser flogsim"
-
 # Create tables from scratch
 MYSQL_REQUEST_ROOT="ssh $DBSERVER $MYSQL --no-defaults -u root -paoeuaoeu mysql"
 if ! $MYSQL_REQUEST_ROOT < $SCRIPT_DIR/init.sql
