@@ -57,5 +57,5 @@ do
 
     $FLOGSIM -L $L -o $o -g $g -P $P -k $k \
              --faults uniform -F $F --coll $COLL --parallelism $PAR \
-             -r $BATCH_SIZE --results-format csv-id --id $GIT_COMMIT
+             -r $BATCH_SIZE --results-format csv-id --id $GIT_COMMIT --no-header
 done
