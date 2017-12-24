@@ -36,7 +36,10 @@ res <- plan %>%
               sd_msg = sd(MsgTask)) %>%
     ungroup() %>%
     filter((COLL != 'checked_corrected_gossip_bcast' | k > 0) &
-           (COLL != 'checked_gossip_corrected_optimal_bcast' | k <= -3)) %>%
+           (COLL != 'checked_gossip_corrected_optimal_bcast'),
+           (COLL != 'phased_checked_corrected_binomial_bcast')) %>%
+    filter(F %in% c(1, 4, 8, 10),
+           P %in% c(127, 511, 1023, 4095, 16383, 65535)) %>%
     collect()
 
 max.runtime = max(res$avg_runtime + res$sd_runtime + 0.1)
