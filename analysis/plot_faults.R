@@ -35,6 +35,8 @@ res <- plan %>%
               sd_runtime = sd(TotalRuntime),
               sd_msg = sd(MsgTask)) %>%
     ungroup() %>%
+    filter((COLL != 'checked_corrected_gossip_bcast' | k > 0) &
+           (COLL != 'checked_gossip_corrected_optimal_bcast' | k <= -3)) %>%
     collect()
 
 max.runtime = max(res$avg_runtime + res$sd_runtime + 0.1)
@@ -45,18 +47,22 @@ res <- mutate(res, COLL = revalue(COLL,
                                   c("checked_corrected_binomial_bcast" = "Checked binomial",
                                     "checked_corrected_optimal_bcast" = "Checked optimal",
                                     "phased_checked_corrected_binomial_bcast" = "Phased binomial",
-                                    "checked_corrected_gossip_bcast" = "Checked gossip")))
+                                    "checked_corrected_gossip_bcast" = "Checked gossip",
+                                    "checked_gossip_corrected_optimal_bcast" = "Checked gossip tree")))
+
+res <- mutate(res, k = as.factor(k))
 
 p <- res %>%
-    group_by(k, PAR, L, o, g, F) %>%
+    group_by(PAR, L, o, g, F) %>%
     do (
         plots = ggplot(data = .) +
-            geom_line(aes(x = P, y = avg_runtime, color = COLL)) +
+            geom_line(aes(x = P, y = avg_runtime,
+                          lty = COLL, col = k)) +
             ylim(0, max.runtime) +
             ggtitle("Scalability at the same fault rate",
-                    subtitle = paste("F =", .$F, "%", "L =", .$L, "o = ", .$o, "g =", .$g, "k =", .$k, "PAR =", .$PAR)) +
+                    subtitle = paste("F =", .$F, "%", "L =", .$L, "o = ", .$o, "g =", .$g, "PAR =", .$PAR)) +
             ylab("Runtime, steps") +
-            guides(color = guide_legend(title = "Collective")) +
+            guides(lty = guide_legend(title = "Collective")) +
             theme_linedraw(base_size = 10) +
             theme(panel.grid.minor = element_blank(),
                   panel.grid.major = element_line(colour='gray'),
@@ -71,7 +77,7 @@ print(lapply(p$plots, function(p) p +
                                   geom_errorbar(aes(x = P,
                                                     ymin = avg_runtime - sd_runtime,
                                                     ymax = avg_runtime + sd_runtime,
-                                                    color = COLL), alpha=0.5)))
+                                                    lty = COLL, group = k), alpha=0.5)))
 print(lapply(p$plots, add.log.scale))
 
 p <- res %>%
@@ -103,15 +109,15 @@ pdf(opt$options$messages, width = 7, height = 4)
 max.msg = max(res$avg_msg + res$sd_msg + 0.1)
 
 p <- res %>%
-    group_by(k, PAR, L, o, g, F) %>%
+    group_by(PAR, L, o, g, F) %>%
     do (
         plots = ggplot(data = .) +
-            geom_line(aes(x = P, y = avg_msg, color = COLL)) +
+            geom_line(aes(x = P, y = avg_msg, linetype = COLL, col = k)) +
             ylim(0, max.msg) +
             ggtitle("Scalability at the same fault rate",
-                    subtitle = paste("F =", .$F, "%", "L =", .$L, "o = ", .$o, "g =", .$g, "k =", .$k, "PAR =", .$PAR)) +
+                    subtitle = paste("F =", .$F, "%", "L =", .$L, "o = ", .$o, "g =", .$g, "PAR =", .$PAR)) +
             ylab("Messages, count") +
-            guides(color = guide_legend(title = "Collective")) +
+            guides(lty = guide_legend(title = "Collective")) +
             theme_linedraw(base_size = 10) +
             theme(panel.grid.minor = element_blank(),
                   panel.grid.major = element_line(colour='gray'),
@@ -124,7 +130,8 @@ print(lapply(p$plots, function(p) p +
                                   geom_errorbar(aes(x = P,
                                                     ymin = avg_msg - sd_msg,
                                                     ymax = avg_msg + sd_msg,
-                                                    color = COLL), alpha=0.5)))
+                                                    lty = COLL,
+                                                    col = k), alpha=0.5)))
 print(lapply(p$plots, add.log.scale))
 
 p <- res %>%
