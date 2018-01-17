@@ -7,7 +7,7 @@ export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source $SCRIPT_DIR/init.env
 
-source $SCRIPT_DIR/parameters_gossip_binomial.env
+source $SCRIPT_DIR/parameters_gossip_fault_free.env
 
 sbatch $SCRIPT_DIR/faults_server.sh
 
