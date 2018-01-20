@@ -23,7 +23,6 @@ cmake $BASE/flogsim.fi/flogsim -DCMAKE_BUILD_TYPE=Release
 make -j
 popd
 
-COMBINATIONS=$(eval echo "$COLL+$L+$o+$g+$P+$k+$F+$PAR")
 for EXPERIMENT in $COMBINATIONS
 do
     read COLL L o g P k F PAR <<<$(IFS="+"; echo $EXPERIMENT)
