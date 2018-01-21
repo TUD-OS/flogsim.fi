@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -A p_ffmk
 #SBATCH --time=70:00:00
-#SBATCH --mem-per-cpu=1500
+#SBATCH --mem-per-cpu=2400
 #SBATCH --ntasks=1
 #SBATCH --output=results-%A.%a.out
 #SBATCH --error=out-%A.%a.err
