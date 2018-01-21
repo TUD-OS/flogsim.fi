@@ -30,8 +30,8 @@ OUT_LOGS=$OUT_DIR/experiment_logs.csv
 OUT_PLAN=$OUT_DIR/experiment_plan.csv
 
 # print header
-DUMMY_PARAMETERS="--results-format csv-id  -r 0  --id STH  --coll optimal_bcast"
-echo "GIT_COMMIT,$($FLOGSIM $DUMMY_PARAMETERS)" > $OUT_LOGS
+DUMMY_PARAMETERS="--results-format csv-id  -r 1  --id STH  --coll phased_checked_corrected_lame_bcast"
+echo "GIT_COMMIT,$($FLOGSIM $DUMMY_PARAMETERS | head -n 1)" > $OUT_LOGS
 #get header for experiment plan
 IN_LOG_DIR=$BASE/slurm/$1
 IN_PLAN=$IN_LOG_DIR/experiment_plan.csv
