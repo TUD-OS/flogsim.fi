@@ -2,6 +2,7 @@
 
 suppressMessages(library(plyr))
 suppressMessages(library(dplyr))
+suppressMessages(library(stringr))
 suppressMessages(library(ggplot2))
 suppressMessages(library(optparse))
 
@@ -24,10 +25,21 @@ if (!dir.exists(log.dir)) {
 plan <- read.csv(file.path(log.dir, 'experiment_plan.csv'))
 runs <- read.csv(file.path(log.dir, 'experiment_logs.csv'))
 
-pdf(opt$options$runtime, width = 7, height = 4)
+runtime.file <- opt$options$runtime
+pdf(runtime.file, width = 7, height = 4)
 
 res <- plan %>%
-    inner_join(runs) %>%
+    inner_join(runs)
+
+## This is a hack to fix the fact that for gossip TotalRuntime appears
+## in RootTreeEnd column
+res <- res %>%
+    mutate(TotalRuntime = ifelse(COLL == 'checked_corrected_gossip_bcast', RootTreeEnd,
+                                 TotalRuntime)) %>%
+    mutate(RootTreeEnd = ifelse(COLL == 'checked_corrected_gossip_bcast', NA,
+                                RootTreeEnd))
+
+res <- res %>%
     group_by(COLL, k, PAR, L, o, g, P, F) %>%
     filter(UnreachedNodes == 0) %>%
     summarise(avg_runtime = mean(TotalRuntime),
@@ -35,28 +47,55 @@ res <- plan %>%
               sd_runtime = sd(TotalRuntime),
               sd_msg = sd(MsgTask)) %>%
     ungroup() %>%
-    filter((COLL != 'checked_corrected_gossip_bcast' |
-            (COLL == 'checked_corrected_gossip_bcast' & k > 0)) &
-           (COLL != 'checked_gossip_corrected_optimal_bcast') &
-           (COLL != 'phased_checked_corrected_binomial_bcast') &
-           (COLL != 'checked_gossip_corrected_binomial_bcast' |
-            (COLL == 'checked_gossip_corrected_binomial_bcast' & k == 1))) %>%
-    filter(F %in% c(1, 4, 8, 10),
-           P %in% c(127, 511, 1023, 4095, 16383, 65535)) %>%
+    collect()
+
+get.mode <- function(phased, always) {
+    if (phased)
+        return('phased')
+    if (always)
+        return('always')
+    return('normal')
+}
+
+res <- res %>%
+    mutate(phased = grepl('phased', COLL),
+           always = grepl('always', COLL)) %>%
+    mutate(COLL = str_replace_all(COLL, '(phased_|always_)', '')) %>%
+    rowwise() %>%
+    mutate(mode = get.mode(phased, always)) %>%
     collect()
 
 max.runtime = max(res$avg_runtime + res$sd_runtime + 0.1)
 
-node.list <- (2^c(1:17)) - 1
+node.list <- unique(res$P)
 
 res <- mutate(res, COLL = revalue(COLL,
                                   c("checked_corrected_binomial_bcast" = "Checked binomial",
                                     "checked_corrected_optimal_bcast" = "Checked optimal",
-                                    "phased_checked_corrected_binomial_bcast" = "Phased binomial",
-                                    "checked_corrected_gossip_bcast" = "Checked gossip",
-                                    "checked_gossip_corrected_optimal_bcast" = "Checked gossip tree")))
+                                    "checked_corrected_lame_bcast" = "Checked Lame",
+                                    "checked_corrected_kary_bcast" = "Checked k-ary",
+                                    "checked_corrected_gossip_bcast" = "Checked gossip"
+                                    )))
 
 res <- mutate(res, k = as.factor(k))
+
+p <- res %>%
+    group_by(PAR, L, o, g, F, COLL) %>%
+    do (
+        plots = ggplot(data = .) +
+            geom_line(aes(x = P, y = avg_runtime,
+                          lty = mode, col = k)) +
+            ylim(0, max.runtime) +
+            ggtitle("Scalability at the same fault rate",
+                    subtitle = paste("F =", .$F, "%", "L =", .$L, "o = ", .$o, "g =", .$g, "PAR =", .$PAR, "COLL =", .$COLL)) +
+            ylab("Runtime, steps") +
+            guides(lty = guide_legend(title = "Collective")) +
+            theme_linedraw(base_size = 10) +
+            theme(panel.grid.minor = element_blank(),
+                  panel.grid.major = element_line(colour='gray'),
+                  legend.box.background = element_rect())
+    )
+print(p$plots)
 
 p <- res %>%
     group_by(PAR, L, o, g, F) %>%
