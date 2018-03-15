@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS experiment_log;
 CREATE TABLE experiment_plan (
     id INT NOT NULL AUTO_INCREMENT,
     GIT_COMMIT CHAR(7) NOT NULL,
-    COLL VARCHAR(40) NOT NULL,
+    COLL VARCHAR(80) NOT NULL,
     k INT,
     L INT,
     o INT,
