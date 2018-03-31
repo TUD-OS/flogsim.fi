@@ -44,7 +44,7 @@ do
 
     read ID GIT_COMMIT COLL k L o g P F PAR CONDUCTED TOTAL <<<$(echo $EXPERIMENT)
 
-    F=$(($P * $F / 10000))
+    # F=$(($P * $F / 10000))
 
     $FLOGSIM -L $L -o $o -g $g -P $P -k $k \
              --faults uniform -F $F --coll $COLL --parallelism $PAR \
