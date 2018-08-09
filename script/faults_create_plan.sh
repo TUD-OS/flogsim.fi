@@ -17,7 +17,9 @@ fi
 
 # Ensure that we are actually running the latest revision
 
-module add gcc/7.1.0 boost/1.65.1-gnu7.1 2>&1 > /dev/null
+module add CMake/3.11.4-GCCcore-6.4.0 Boost/1.66.0-intel-2018a 2>&1 > /dev/null
+module add GCCcore/7.3.0 2>&1 > /dev/null
+
 pushd $BASE/flogsim_build
 cmake $BASE/flogsim.fi/flogsim -DCMAKE_BUILD_TYPE=Release
 make -j

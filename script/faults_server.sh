@@ -15,4 +15,6 @@ set -euo pipefail
 # See init.sql
 
 cd $MYSQL_DIR
-./bin/mysqld --no-defaults --datadir=./data -L ./share/ -P $DBSERVER_PORT
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MYSQL_DIR/../lib
+
+./bin/mysqld --no-defaults --datadir=./data -L ./share/ -P $DBSERVER_PORT --innodb_use_native_aio=0
