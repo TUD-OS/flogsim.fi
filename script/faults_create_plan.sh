@@ -25,10 +25,10 @@ popd
 
 for EXPERIMENT in $COMBINATIONS
 do
-    read COLL L o g P k F PAR <<<$(IFS="+"; echo $EXPERIMENT)
+    read COLL L o g P k F PAR d <<<$(IFS="+"; echo $EXPERIMENT)
 
     CONDUCTED=0
 
-    echo $GIT_COMMIT $COLL $L $o $g $P $k $F $PAR $TOTAL
-    echo "INSERT INTO experiment_plan (GIT_COMMIT,COLL,k,L,o,g,P,F,PAR,conducted,total) VALUES (\"$GIT_COMMIT\",\"$COLL\",$k,$L,$o,$g,$P,$F,$PAR,$CONDUCTED,$TOTAL)" | $MYSQL_REQUEST
+    echo $GIT_COMMIT $COLL $L $o $g $P $k $F $PAR $d $TOTAL
+    echo "INSERT INTO experiment_plan (GIT_COMMIT,COLL,k,L,o,g,P,F,PAR,d,conducted,total) VALUES (\"$GIT_COMMIT\",\"$COLL\",$k,$L,$o,$g,$P,$F,$PAR,$d,$CONDUCTED,$TOTAL)" | $MYSQL_REQUEST
 done

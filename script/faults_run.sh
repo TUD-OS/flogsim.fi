@@ -42,11 +42,11 @@ do
         exit 0
     fi
 
-    read ID GIT_COMMIT COLL k L o g P F PAR CONDUCTED TOTAL <<<$(echo $EXPERIMENT)
+    read ID GIT_COMMIT COLL k L o g P F PAR d CONDUCTED TOTAL <<<$(echo $EXPERIMENT)
 
     # F=$(($P * $F / 10000))
 
-    $FLOGSIM -L $L -o $o -g $g -P $P -k $k \
+    $FLOGSIM -L $L -o $o -g $g -P $P -k $k -d $d \
              --faults uniform -F $F --coll $COLL --parallelism $PAR \
              -r $BATCH_SIZE --results-format csv-id --id $ID --no-header
 done

@@ -20,6 +20,7 @@ CREATE TABLE experiment_plan (
     P INT,
     F INT,
     PAR INT,
+    d INT,
     conducted INT,
     total INT,
     primary key(id));
