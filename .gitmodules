@@ -1,4 +1,4 @@
 [submodule "flogsim"]
 	path = flogsim
-	url = ../flogsim
-	branch = mplaneta/dev
+	url = https://github.com/TUD-OS/flogsim.git
+	branch = master
